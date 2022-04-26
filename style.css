@@ -1,0 +1,33 @@
+.page {
+    margin: 0 auto;
+    max-width: 1280px;
+    font-family: Arial, sans-serif;
+    background: #808080;
+}
+
+.parameters {
+    padding-left: 10px;
+}
+
+.parameters__title {
+    font-size: 20px;
+}
+
+.table {
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+.table__item {
+    width: 120px;
+    height: 120px;
+    border: 2px solid #00FA9A;
+}
+
+.square_enable {
+    background-image: url("./images/question.jpg");
+}
+
+.lukas_enable {
+    background-image: url("./images/lukas.jpg");
+}
