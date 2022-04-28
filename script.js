@@ -1,3 +1,5 @@
+
+
 class Point {
     constructor(x, y) {
         this._x = x;
@@ -25,6 +27,11 @@ class Point {
 }
 
 const startPoint = new Point(0,0);
+const fakePoint = new Point(0,1);
+
+const points = [startPoint, fakePoint]
+
+
 
 
 const handleMoving = (event) => {
@@ -47,29 +54,28 @@ const handleMoving = (event) => {
     if (event.key === 'ArrowDown' && startPoint.getY() > minValue && startPoint.getY() <= maxValue) {
         startPoint.moveDown();
     }
-    render(startPoint)
+
+    render(points)
 }
 
-document.addEventListener('keydown', handleMoving)
 
-const render = (point) => {
+
+const render = (points) => {
     const listTableItem = document.querySelectorAll('.table__item');
 
     listTableItem.forEach((item) => {
-        if (item.classList.contains('lukas_enable')) {
-            item.classList.remove('lukas_enable')
-        }
-        if (item.classList.contains('square_enable')) {
-            item.classList.remove('square_enable')
-        }
+        item.classList.remove('lukas_enable')
     });
 
-    const lukas = document.querySelector(`[x="${point.getX()}"][y="${point.getY()}"]`);
-    lukas.classList.add('lukas_enable');
 
-    const parameterX = document.querySelector('.parameters__x');
-    const parameterY = document.querySelector('.parameters__y');
-    parameterX.textContent = point.getX();
-    parameterY.textContent = point.getY();
-
+    points.forEach((point) => {
+            const lukas = document.querySelector(`[x="${point.getX()}"][y="${point.getY()}"]`);
+            lukas.classList.add('lukas_enable');
+    })
 }
+main = () => {
+    document.addEventListener('keydown', handleMoving);
+    render(points)
+}
+
+main()
