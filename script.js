@@ -1,23 +1,34 @@
 
 
 class Point {
-    constructor(x, y) {
+    constructor(x, y, image, border) {
         this._x = x;
         this._y = y;
+        this._image = image;
+        this._border = border;
     }
 
-    moveLeft = () => {
-        this._x = this._x - 1;
+    setX = (x) => {
+        this._x = x;
     }
-    moveRight = () => {
-        this._x = this._x + 1;
+    setY= (y) => {
+        this._y = y;
     }
-    moveUp = () => {
-        this._y = this._y + 1;
+    setImage = (image) => {
+        this._image = image;
     }
-    moveDown = () => {
-        this._y = this._y - 1;
+    setBorder = (border) => {
+        this._border = border;
     }
+
+    getImage = () => {
+        return this._image
+    }
+
+    getBorder = () => {
+        return this._border
+    }
+
     getX = () => {
         return this._x
     }
@@ -26,36 +37,71 @@ class Point {
     }
 }
 
-const startPoint = new Point(0,0);
-const fakePoint = new Point(0,1);
+const startPoint = new Point(0,0, 'square_enable', 'table__item-border');
+const fakePoint = new Point(1,2, 'lukas_enable', undefined);
+const manPoint = new Point(0, 1, 'lukas_enable', undefined);
 
-const points = [startPoint, fakePoint]
+const points = [startPoint, fakePoint, manPoint,
+    new Point(3, 1, 'lukas_enable', undefined)
+]
 
 
 
 
 const handleMoving = (event) => {
+
+// Вычисляем будущее значение x и y
+    let destX = startPoint.getX();
+    let destY = startPoint.getY();
+
+    if (event.key === 'ArrowLeft') {
+        destX = startPoint.getX() - 1;
+    }
+    if (event.key === 'ArrowRight') {
+        destX = startPoint.getX() + 1;
+    }
+    if (event.key === 'ArrowUp') {
+        destY = startPoint.getY() + 1;
+    }
+    if (event.key === 'ArrowDown') {
+        destY = startPoint.getY() - 1;
+    }
+
+    //Проверяем границу
     const maxValue = 3;
     const minValue = 0;
+    let isConditionBorder
 
-    if (event.key === 'ArrowLeft' && startPoint.getX() > minValue && startPoint.getX() <= maxValue) {
-        startPoint.moveLeft();
+    if (minValue <= destX && maxValue >= destX && minValue <= destY && maxValue >= destY) {
+         isConditionBorder = true;
+    } else {
+         isConditionBorder = false
     }
 
-    if (event.key === 'ArrowRight' && startPoint.getX() >= minValue && startPoint.getX() < maxValue) {
-        startPoint.moveRight();
+    // Проверяем наличие и находим лукаса который расположен на точке перемещения
+    // Найти точку с которой пересекаемся (а если не найдено undefinied)
+    let pointBusy = undefined;
+    points.forEach((point) => {
+        if (point.getX() === destX && point.getY() === destY) {
+            pointBusy = point;
+        }
+    })
 
+
+    // Перемещаем вопрос на точку с координатами destX и destY
+
+    if (isConditionBorder) {
+        if (pointBusy !== undefined) {
+            pointBusy.setX(startPoint.getX())
+            pointBusy.setY(startPoint.getY())
+        }
+        startPoint.setX(destX)
+        startPoint.setY(destY)
     }
 
-    if (event.key === 'ArrowUp' && startPoint.getY() >= minValue && startPoint.getY() < maxValue) {
-        startPoint.moveUp();
-    }
-
-    if (event.key === 'ArrowDown' && startPoint.getY() > minValue && startPoint.getY() <= maxValue) {
-        startPoint.moveDown();
-    }
-
+ // Перерисовываем поле и объекты
     render(points)
+
 }
 
 
@@ -65,17 +111,21 @@ const render = (points) => {
 
     listTableItem.forEach((item) => {
         item.classList.remove('lukas_enable')
+        item.classList.remove('square_enable')
+        item.classList.remove('table__item-border')
     });
 
-
     points.forEach((point) => {
-            const lukas = document.querySelector(`[x="${point.getX()}"][y="${point.getY()}"]`);
-            lukas.classList.add('lukas_enable');
-    })
+        const lukas = document.querySelector(`[x="${point.getX()}"][y="${point.getY()}"]`);
+        lukas.classList.add(point.getImage());
+        lukas.classList.add(point.getBorder());
+
+    });
 }
-main = () => {
+
+const main = () => {
     document.addEventListener('keydown', handleMoving);
-    render(points)
+    render(points);
 }
 
 main()

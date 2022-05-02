@@ -1,6 +1,7 @@
 .page {
     margin: 0 auto;
     max-width: 1280px;
+    height: 100px;
     font-family: Arial, sans-serif;
     background: #808080;
 }
@@ -30,4 +31,9 @@
 
 .lukas_enable {
     background-image: url("./images/lukas.jpg");
+}
+
+.table__item-border {
+    background-color: #808080;
+    border: deepskyblue 2.5px solid;
 }
