@@ -1,11 +1,10 @@
 
 
 class Point {
-    constructor(x, y, image, border) {
+    constructor(x, y, number) {
         this._x = x;
         this._y = y;
-        this._image = image;
-        this._border = border;
+        this._number = number;
     }
 
     setX = (x) => {
@@ -14,20 +13,6 @@ class Point {
     setY= (y) => {
         this._y = y;
     }
-    setImage = (image) => {
-        this._image = image;
-    }
-    setBorder = (border) => {
-        this._border = border;
-    }
-
-    getImage = () => {
-        return this._image
-    }
-
-    getBorder = () => {
-        return this._border
-    }
 
     getX = () => {
         return this._x
@@ -35,91 +20,116 @@ class Point {
     getY = () => {
         return this._y
     }
+    getNumber = () => {
+        return this._number
+    }
 }
 
-const startPoint = new Point(0,0, 'square_enable', 'table__item-border');
-const fakePoint = new Point(1,2, 'lukas_enable', undefined);
-const manPoint = new Point(0, 1, 'lukas_enable', undefined);
+const point1 = new Point(0,0, '5');
+const point2 = new Point(1,0, '14');
+const point3 = new Point(2, 0, '9');
+const point4 = new Point(3, 0, '11');
+const point5 = new Point(0, 1, '2');
+const point6 = new Point(1, 1, '');
+const point7 = new Point(2, 1, '6');
+const point8 = new Point(3, 1, '13');
+const point9 = new Point(0, 2, '10');
+const point10 = new Point(1, 2, '7');
+const point11 = new Point(2, 2, '4');
+const point12 = new Point(3, 2, '15');
+const point13 = new Point(0, 3, '3');
+const point14 = new Point(1, 3, '8');
+const point15 = new Point(2, 3, '12');
+const point16 = new Point(3, 3, '1');
 
-const points = [startPoint, fakePoint, manPoint,
-    new Point(3, 1, 'lukas_enable', undefined)
-]
 
 
+const points = [point1, point2, point3, point4, point5, point7, point8, point9, point10, point11, point12, point13, point14, point15, point16]
 
-
-const handleMoving = (event) => {
-
-// Вычисляем будущее значение x и y
-    let destX = startPoint.getX();
-    let destY = startPoint.getY();
+const calculateFuturePoint = (event, point) => {
+    let destX = point.getX();
+    let destY = point.getY();
 
     if (event.key === 'ArrowLeft') {
-        destX = startPoint.getX() - 1;
+        destX = point.getX() - 1;
     }
     if (event.key === 'ArrowRight') {
-        destX = startPoint.getX() + 1;
+        destX = point.getX() + 1;
     }
     if (event.key === 'ArrowUp') {
-        destY = startPoint.getY() + 1;
+        destY = point.getY() + 1;
     }
     if (event.key === 'ArrowDown') {
-        destY = startPoint.getY() - 1;
+        destY = point.getY() - 1;
     }
+    return [destX, destY]
+}
 
-    //Проверяем границу
+const crossingBorder = (destX, destY) => {
     const maxValue = 3;
     const minValue = 0;
     let isConditionBorder
 
     if (minValue <= destX && maxValue >= destX && minValue <= destY && maxValue >= destY) {
-         isConditionBorder = true;
+        isConditionBorder = true;
     } else {
-         isConditionBorder = false
+        isConditionBorder = false;
     }
+    return isConditionBorder
+}
 
-    // Проверяем наличие и находим лукаса который расположен на точке перемещения
-    // Найти точку с которой пересекаемся (а если не найдено undefinied)
+const findPoint = (destX, destY) => {
     let pointBusy = undefined;
     points.forEach((point) => {
         if (point.getX() === destX && point.getY() === destY) {
             pointBusy = point;
         }
     })
+    return pointBusy
+}
 
+const handleMoving = (event) => {
+    let isPointMoved = false
+    points.forEach((startPoint) => {
+        if (!isPointMoved) {
 
-    // Перемещаем вопрос на точку с координатами destX и destY
+            // Вычисляем будущее значение x и y с помощью функции calculateFuturePoint
+            const futureCoordinates = calculateFuturePoint(event, startPoint)
+            const destX = futureCoordinates[0];
+            const destY = futureCoordinates[1];
 
-    if (isConditionBorder) {
-        if (pointBusy !== undefined) {
-            pointBusy.setX(startPoint.getX())
-            pointBusy.setY(startPoint.getY())
+            //Проверяем наличие боковой границы функцией crossingBorder
+            const isConditionBorder = crossingBorder(destX, destY);
+
+            // Проверяем занята ли точка на которую планируется перемещение текущей клетки
+            // Сохраняем эту клетку в новую переменную как объект
+
+            const pointBusy = findPoint(destX, destY);
+
+            // Перемещаем клетку на точку с координатами destX и destY
+
+            if (isConditionBorder && pointBusy === undefined) {
+                startPoint.setX(destX)
+                startPoint.setY(destY)
+                isPointMoved = true
+            }
         }
-        startPoint.setX(destX)
-        startPoint.setY(destY)
-    }
-
- // Перерисовываем поле и объекты
+    })
+    // Перерисовываем поле и объекты
     render(points)
 
 }
-
-
 
 const render = (points) => {
     const listTableItem = document.querySelectorAll('.table__item');
 
     listTableItem.forEach((item) => {
-        item.classList.remove('lukas_enable')
-        item.classList.remove('square_enable')
-        item.classList.remove('table__item-border')
+        item.textContent = ''
     });
 
     points.forEach((point) => {
-        const lukas = document.querySelector(`[x="${point.getX()}"][y="${point.getY()}"]`);
-        lukas.classList.add(point.getImage());
-        lukas.classList.add(point.getBorder());
-
+        const pointElement = document.querySelector(`[x="${point.getX()}"][y="${point.getY()}"]`);
+        pointElement.textContent = point.getNumber();
     });
 }
 
