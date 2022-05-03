@@ -1,5 +1,3 @@
-
-
 class Point {
     constructor(x, y, number) {
         this._x = x;
@@ -10,7 +8,7 @@ class Point {
     setX = (x) => {
         this._x = x;
     }
-    setY= (y) => {
+    setY = (y) => {
         this._y = y;
     }
 
@@ -42,95 +40,121 @@ const point14 = new Point(1, 3, '8');
 const point15 = new Point(2, 3, '12');
 const point16 = new Point(3, 3, '1');
 
+const swapСhips = (event) => {
+    const freePoint = searchFreePoint(points)
 
+    const futureCoordinates = receiptFutureCoordinates(event, freePoint);
+    let destX = futureCoordinates[0]
+    let destY = futureCoordinates[1]
 
-const points = [point1, point2, point3, point4, point5, point7, point8, point9, point10, point11, point12, point13, point14, point15, point16]
+    const crossingBorder = detectionBorder(destX, destY)
 
-const calculateFuturePoint = (event, point) => {
-    let destX = point.getX();
-    let destY = point.getY();
+    const futurePoint = searchFuturePoint(points, destX, destY)
+
+    if (crossingBorder) {
+        shiftCards(freePoint, futurePoint)
+    }
+}
+
+const searchFreePoint = (points) => {
+    let freePoint
+    points.forEach((point) => {
+        if (point.getNumber() === '') {
+            freePoint = point
+        }
+    })
+    return freePoint
+}
+
+const receiptFutureCoordinates = (event, freePoint) => {
+    let destX = freePoint.getX()
+    let destY = freePoint.getY()
 
     if (event.key === 'ArrowLeft') {
-        destX = point.getX() - 1;
+        destX = freePoint.getX() + 1;
     }
     if (event.key === 'ArrowRight') {
-        destX = point.getX() + 1;
+        destX = freePoint.getX() - 1;
     }
     if (event.key === 'ArrowUp') {
-        destY = point.getY() + 1;
+        destY = freePoint.getY() - 1;
     }
     if (event.key === 'ArrowDown') {
-        destY = point.getY() - 1;
+        destY = freePoint.getY() + 1;
     }
     return [destX, destY]
 }
 
-const crossingBorder = (destX, destY) => {
-    const maxValue = 3;
-    const minValue = 0;
-    let isConditionBorder
+const detectionBorder = (destX, destY) => {
+    const minValue = 0
+    const maxValue = 3
+    let crossingBorder = false
 
-    if (minValue <= destX && maxValue >= destX && minValue <= destY && maxValue >= destY) {
-        isConditionBorder = true;
-    } else {
-        isConditionBorder = false;
+    if (minValue <= destX && destX <= maxValue && minValue <= destY && destY <= maxValue) {
+        crossingBorder = true
     }
-    return isConditionBorder
+    return crossingBorder
 }
 
-const findPoint = (destX, destY) => {
-    let pointBusy = undefined;
+function soundPlay() {
+    let audio = new Audio('pokagu.mp3');
+    audio.play();
+}
+
+const searchFuturePoint = (points, destX, destY) => {
+    let futurePoint
     points.forEach((point) => {
         if (point.getX() === destX && point.getY() === destY) {
-            pointBusy = point;
+            futurePoint = point
         }
     })
-    return pointBusy
+    return futurePoint
 }
 
+const shiftCards = (freePoint, futurePoint) => {
+    let pointFutureX = futurePoint.getX()
+    let pointFutureY = futurePoint.getY()
+    futurePoint.setX(freePoint.getX())
+    futurePoint.setY(freePoint.getY())
+    freePoint.setX(pointFutureX)
+    freePoint.setY(pointFutureY)
+}
+
+const points = [point1, point2, point3, point4, point5, point6, point7, point8, point9, point10, point11, point12, point13, point14, point15, point16]
+
 const handleMoving = (event) => {
-    let isPointMoved = false
-    points.forEach((startPoint) => {
-        if (!isPointMoved) {
 
-            // Вычисляем будущее значение x и y с помощью функции calculateFuturePoint
-            const futureCoordinates = calculateFuturePoint(event, startPoint)
-            const destX = futureCoordinates[0];
-            const destY = futureCoordinates[1];
+    swapСhips(event)
 
-            //Проверяем наличие боковой границы функцией crossingBorder
-            const isConditionBorder = crossingBorder(destX, destY);
-
-            // Проверяем занята ли точка на которую планируется перемещение текущей клетки
-            // Сохраняем эту клетку в новую переменную как объект
-
-            const pointBusy = findPoint(destX, destY);
-
-            // Перемещаем клетку на точку с координатами destX и destY
-
-            if (isConditionBorder && pointBusy === undefined) {
-                startPoint.setX(destX)
-                startPoint.setY(destY)
-                isPointMoved = true
-            }
-        }
-    })
-    // Перерисовываем поле и объекты
     render(points)
-
 }
 
 const render = (points) => {
     const listTableItem = document.querySelectorAll('.table__item');
 
+
+
     listTableItem.forEach((item) => {
         item.textContent = ''
     });
 
+    let finishX = ''
+    let finishY = ''
+
     points.forEach((point) => {
         const pointElement = document.querySelector(`[x="${point.getX()}"][y="${point.getY()}"]`);
         pointElement.textContent = point.getNumber();
+
+        finishX += point.getX()
+        finishY += point.getY()
     });
+
+    if (finishX === '0102131012322330' && finishY === '2011302012303213') {
+        const lukas = document.querySelector('.lukas')
+        soundPlay()
+        lukas.classList.add('lukas_enable')
+        document.removeEventListener('keydown', handleMoving)
+    }
 }
 
 const main = () => {
@@ -139,3 +163,9 @@ const main = () => {
 }
 
 main()
+
+
+
+
+//0102131012322330
+//2011302012303213
