@@ -40,6 +40,8 @@ const point14 = new Point(1, 3, '8');
 const point15 = new Point(2, 3, '12');
 const point16 = new Point(3, 3, '1');
 
+const points = [point1, point2, point3, point4, point5, point6, point7, point8, point9, point10, point11, point12, point13, point14, point15, point16]
+
 const swapСhips = (event) => {
     const freePoint = searchFreePoint(points)
 
@@ -120,36 +122,80 @@ const shiftCards = (freePoint, futurePoint) => {
     freePoint.setY(pointFutureY)
 }
 
-const points = [point1, point2, point3, point4, point5, point6, point7, point8, point9, point10, point11, point12, point13, point14, point15, point16]
+const chooseDifficulty = (points) => {
+    const easy = document.querySelector('#point1')
+    const intermediate = document.querySelector('#point2')
+    const normal = document.querySelector('#point3')
+    const hard = document.querySelector('#point4')
 
-const handleMoving = (event) => {
+    let skillPoints
 
-    swapСhips(event)
+    if (easy.checked) {
+         skillPoints = points.filter((point) => {
+            if (point.getNumber() >= 1 && point.getNumber() <= 4) {
+                return point
+            }
+        })
+    }
+    if (intermediate.checked) {
+        skillPoints = points.filter((point) => {
+            if (point.getNumber() >= 1 && point.getNumber() <= 8) {
+                return point
+            }
+        })
+    }
+    if (normal.checked) {
+        skillPoints = points.filter((point) => {
+            if (point.getNumber() >= 1 && point.getNumber() <= 12) {
+                return point
+            }
+        })
+    }
 
-    render(points)
+    if (hard.checked) {
+        skillPoints = points
+    }
+
+    return skillPoints
 }
 
-const render = (points) => {
-    const listTableItem = document.querySelectorAll('.table__item');
-
-
-
-    listTableItem.forEach((item) => {
-        item.textContent = ''
-    });
-
-    let finishX = ''
-    let finishY = ''
+const validate = (points) => {
+    const template = {
+        '1': {'x': 0, 'y': 3},
+        '2': {'x': 1, 'y': 3},
+        '3': {'x': 2, 'y': 3},
+        '4': {'x': 3, 'y': 3},
+        '5': {'x': 0, 'y': 2},
+        '6': {'x': 1, 'y': 2},
+        '7': {'x': 2, 'y': 2},
+        '8': {'x': 3, 'y': 2},
+        '9': {'x': 0, 'y': 1},
+        '10': {'x': 1, 'y': 1},
+        '11': {'x': 2, 'y': 1},
+        '12': {'x': 3, 'y': 1},
+        '13': {'x': 0, 'y': 0},
+        '14': {'x': 1, 'y': 0},
+        '15': {'x': 2, 'y': 0},
+        '': {'x': 3, 'y': 0}
+    }
+    let valid = true
 
     points.forEach((point) => {
-        const pointElement = document.querySelector(`[x="${point.getX()}"][y="${point.getY()}"]`);
-        pointElement.textContent = point.getNumber();
+                let validX = template[point.getNumber()]['x']
+                let validY = template[point.getNumber()]['y']
 
-        finishX += point.getX()
-        finishY += point.getY()
-    });
+                if (!(point.getX() === validX && point.getY() === validY)) {
+                    valid = false
+                }
+        })
 
-    if (finishX === '0102131012322330' && finishY === '2011302012303213') {
+    return valid
+}
+
+const checkEndGame = () => {
+    const difficulty = chooseDifficulty(points)
+    let valid = validate(difficulty)
+    if(valid) {
         const lukas = document.querySelector('.lukas')
         soundPlay()
         lukas.classList.add('lukas_enable')
@@ -157,15 +203,41 @@ const render = (points) => {
     }
 }
 
-const main = () => {
+function listenersDifficulty() {
     document.addEventListener('keydown', handleMoving);
+    const pointers = document.querySelectorAll('input')
+    pointers.forEach((point) => {
+        point.addEventListener('click', () => {
+            chooseDifficulty(points)
+        })
+    })
+}
+
+const handleMoving = (event) => {
+
+    swapСhips(event)
+
+    checkEndGame()
+
+    render(points)
+}
+
+const render = (points) => {
+    const listTableItem = document.querySelectorAll('.table__item');
+
+    listTableItem.forEach((item) => {
+        item.textContent = ''
+    });
+
+    points.forEach((point) => {
+        const pointElement = document.querySelector(`[x="${point.getX()}"][y="${point.getY()}"]`);
+        pointElement.textContent = point.getNumber();
+    })
+}
+
+const main = () => {
+    listenersDifficulty();
     render(points);
 }
 
 main()
-
-
-
-
-//0102131012322330
-//2011302012303213

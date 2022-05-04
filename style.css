@@ -12,16 +12,16 @@
 }
 
 .parameters__subtitle {
-    margin: 10px 0 10px 95px;
-    font-size: 35px;
-    color: #808080;
-    /*color: #58e014;*/
+    margin: 5px 0 0 23px;
+    font-size: 18px;
+    color: #58e014;
     font-weight: bold;
+    text-align: center;
 }
 
 .parameters__title {
     margin: 0 auto;
-    font-size: 45px;
+    font-size: 32px;
     color: #e01414;
     font-weight: bold;
 }
@@ -67,3 +67,26 @@
     border: deepskyblue 2.5px solid;
 }
 
+
+.radio {
+    display: flex;
+    flex-direction: column;
+}
+
+.buttons {
+    transform:scale(1.5);
+    opacity:0.9;
+}
+
+label {
+    margin: 4px 0;
+}
+
+p {
+    margin: 0;
+    font-weight: bold;
+}
+
+.title-container {
+    display: flex;
+}

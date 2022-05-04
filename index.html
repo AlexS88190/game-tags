@@ -9,40 +9,52 @@
     <title>Game</title>
   </head>
   <body class="page">
-    <div class="parameters">
-      <h1 class="parameters__title">WARNING!!!!!</h1>
-      <p class="parameters__subtitle">Перед игрой прибавь громкость на 100% и дойди до финиша</p>
+    <div class="title-container">
+      <div class="radio">
+        <p>Выбрать сложность (после выбора нажать на пустом месте мышью)</p>
+        <label><input class="buttons" id="point1" type="radio" name="point" value="one" checked> easy (собрать первый
+          ряд от 1 до 4)</label>
+        <label><input class="buttons" id="point2" type="radio" name="point" value="two"> intermediate (собрать два ряда от 1 до 8)</label>
+        <label><input class="buttons" id="point3" type="radio" name="point" value="three"> normal (собрать три ряда от 1
+          до 12)</label>
+        <label><input class="buttons" id="point4" type="radio" name="point" value="four"> hard (собрать от 1 до
+          15)</label>
+      </div>
+      <div class="parameters">
+        <h1 class="parameters__title">WARNING!!!!!</h1>
+        <p class="parameters__subtitle">Перед игрой прибавь громкость на 100% и дойди до финиша (управление
+          осуществляется
+          стрелками)</p>
+      </div>
     </div>
-
     <div class="container">
-
-    <div class="lukas"></div>
-    <table class="table">
-      <tr class="table__list">
-        <td class="table__item" x="0" y="3"></td>
-        <td class="table__item" x="1" y="3"></td>
-        <td class="table__item" x="2" y="3"></td>
-        <td class="table__item" x="3" y="3"></td>
-      </tr>
-      <tr class="table__list">
-        <td class="table__item" x="0" y="2"></td>
-        <td class="table__item" x="1" y="2"></td>
-        <td class="table__item" x="2" y="2"></td>
-        <td class="table__item" x="3" y="2"></td>
-      </tr>
-      <tr class="table__list">
-        <td class="table__item" x="0" y="1"></td>
-        <td class="table__item" x="1" y="1"></td>
-        <td class="table__item" x="2" y="1"></td>
-        <td class="table__item" x="3" y="1"></td>
-      </tr>
-      <tr class="table__list">
-        <td class="table__item" x="0" y="0"></td>
-        <td class="table__item" x="1" y="0"></td>
-        <td class="table__item" x="2" y="0"></td>
-        <td class="table__item" x="3" y="0"></td>
-      </tr>
-    </table>
+      <div class="lukas"></div>
+      <table class="table">
+        <tr class="table__list">
+          <td class="table__item" x="0" y="3"></td>
+          <td class="table__item" x="1" y="3"></td>
+          <td class="table__item" x="2" y="3"></td>
+          <td class="table__item" x="3" y="3"></td>
+        </tr>
+        <tr class="table__list">
+          <td class="table__item" x="0" y="2"></td>
+          <td class="table__item" x="1" y="2"></td>
+          <td class="table__item" x="2" y="2"></td>
+          <td class="table__item" x="3" y="2"></td>
+        </tr>
+        <tr class="table__list">
+          <td class="table__item" x="0" y="1"></td>
+          <td class="table__item" x="1" y="1"></td>
+          <td class="table__item" x="2" y="1"></td>
+          <td class="table__item" x="3" y="1"></td>
+        </tr>
+        <tr class="table__list">
+          <td class="table__item" x="0" y="0"></td>
+          <td class="table__item" x="1" y="0"></td>
+          <td class="table__item" x="2" y="0"></td>
+          <td class="table__item" x="3" y="0"></td>
+        </tr>
+      </table>
     </div>
 
 
